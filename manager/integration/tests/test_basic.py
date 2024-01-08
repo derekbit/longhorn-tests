@@ -122,6 +122,7 @@ BACKUPSTORE = get_backupstores()
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_hosts(client):  # NOQA
     """
     Check node name and IP
@@ -147,6 +148,7 @@ def test_hosts(client):  # NOQA
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_settings(client):  # NOQA
     """
     Check input for settings
@@ -246,6 +248,7 @@ def volume_rw_test(dev):
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_basic(client, volume_name):  # NOQA
     """
     Test basic volume operations:
@@ -264,11 +267,11 @@ def volume_basic_test(client, volume_name, backing_image=""):  # NOQA
 
     with pytest.raises(Exception):
         volume = client.create_volume(name="wrong_volume-name-1.0", size=SIZE,
-                                      numberOfReplicas=2)
+                                      numberOfReplicas=2, dataEngine="v2")
         volume = client.create_volume(name="wrong_volume-name", size=SIZE,
-                                      numberOfReplicas=2)
+                                      numberOfReplicas=2, dataEngine="v2")
         volume = client.create_volume(name="wrong_volume-name", size=SIZE,
-                                      numberOfReplicas=2,
+                                      numberOfReplicas=2, dataEngine="v2",
                                       frontend="invalid_frontend")
 
     volume = create_and_check_volume(client, volume_name, num_replicas, SIZE,
@@ -624,6 +627,7 @@ def backup_status_for_unavailable_replicas_test(client, volume_name,  # NOQA
     assert volume.lastBackupAt == ""
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_block_deletion(set_random_backupstore, client, core_api, volume_name):  # NOQA
     """
     Test backup block deletion
@@ -1031,6 +1035,7 @@ def test_dr_volume_with_all_backup_blocks_deleted(set_random_backupstore, client
     check_volume_data(dr_vol, data0, False)
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_volume_list(set_random_backupstore, client, core_api):  # NOQA
     """
     Test backup volume list
@@ -1113,6 +1118,7 @@ def test_backup_volume_list(set_random_backupstore, client, core_api):  # NOQA
     backupstore_cleanup(client)
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_metadata_deletion(set_random_backupstore, client, core_api, volume_name):  # NOQA
     """
     Test backup metadata deletion
@@ -1299,6 +1305,7 @@ def test_backup_metadata_deletion(set_random_backupstore, client, core_api, volu
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_backup(set_random_backupstore, client, volume_name):  # NOQA
     """
     Test basic backup
@@ -1322,7 +1329,7 @@ def test_backup(set_random_backupstore, client, volume_name):  # NOQA
 
 
 def backup_test(client, volume_name, size, backing_image="", compression_method=DEFAULT_BACKUP_COMPRESSION_METHOD):  # NOQA
-    volume = create_and_check_volume(client, volume_name, 2, size,
+    volume = create_and_check_volume(client, volume_name, 3, size,
                                      backing_image)
 
     lht_hostId = get_self_host_id()
@@ -1340,7 +1347,8 @@ def backupstore_test(client, host_id, volname, size, compression_method):  # NOQ
     restore_name = generate_volume_name()
     volume = client.create_volume(name=restore_name, size=size,
                                   numberOfReplicas=2,
-                                  fromBackup=b.url)
+                                  fromBackup=b.url,
+                                  dataEngine="v2")
 
     volume = common.wait_for_volume_restoration_completed(client, restore_name)
     volume = common.wait_for_volume_detached(client, restore_name)
@@ -1367,6 +1375,7 @@ def backupstore_test(client, host_id, volname, size, compression_method):  # NOQ
 
 
 @pytest.mark.coretest  # NOQA
+@pytest.mark.v2   # NOQA
 def test_backup_labels(set_random_backupstore, client, random_labels, volume_name):  # NOQA
     """
     Test that the proper Labels are applied when creating a Backup manually.
@@ -1630,6 +1639,7 @@ def restore_inc_test(client, core_api, volume_name, pod):  # NOQA
     delete_and_wait_pv(core_api, sb_volume2_name)
 
 
+@pytest.mark.v2   # NOQA
 def test_deleting_backup_volume(set_random_backupstore, client, volume_name):  # NOQA
     """
     Test deleting backup volumes
@@ -1652,6 +1662,7 @@ def test_deleting_backup_volume(set_random_backupstore, client, volume_name):  #
 
 @pytest.mark.coretest   # NOQA
 @pytest.mark.skipif('nfs' not in BACKUPSTORE, reason='This test is only applicable for nfs')  # NOQA
+@pytest.mark.v2   # NOQA
 def test_listing_backup_volume(client, backing_image=""):   # NOQA
     """
     Test listing backup volumes
@@ -1817,6 +1828,7 @@ def test_listing_backup_volume(client, backing_image=""):   # NOQA
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_multinode(client, volume_name):  # NOQA
     """
     Test the volume can be attached on multiple nodes
@@ -1828,7 +1840,8 @@ def test_volume_multinode(client, volume_name):  # NOQA
 
     volume = client.create_volume(name=volume_name,
                                   size=SIZE,
-                                  numberOfReplicas=2)
+                                  numberOfReplicas=2,
+                                  dataEngine="v2")
     volume = common.wait_for_volume_detached(client,
                                              volume_name)
 
@@ -1905,6 +1918,7 @@ def test_pvc_storage_class_name_from_backup_volume(): # NOQA
 
 
 @pytest.mark.coretest  # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_scheduling_failure(client, volume_name):  # NOQA
     '''
     Test fail to schedule by disable scheduling for all the nodes
@@ -1929,7 +1943,7 @@ def test_volume_scheduling_failure(client, volume_name):  # NOQA
                                            "allowScheduling", False)
 
     volume = client.create_volume(name=volume_name, size=SIZE,
-                                  numberOfReplicas=3)
+                                  numberOfReplicas=3, dataEngine="v2")
 
     volume = common.wait_for_volume_condition_scheduled(client, volume_name,
                                                         "status",
@@ -1963,6 +1977,7 @@ def test_volume_scheduling_failure(client, volume_name):  # NOQA
 
 
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_setting_default_replica_count(client, volume_name):  # NOQA
     """
     Test `Default Replica Count` setting
@@ -1975,7 +1990,7 @@ def test_setting_default_replica_count(client, volume_name):  # NOQA
     old_value = setting.value
     setting = client.update(setting, value="5")
 
-    volume = client.create_volume(name=volume_name, size=SIZE)
+    volume = client.create_volume(name=volume_name, size=SIZE, dataEngine="v2")
     volume = common.wait_for_volume_detached(client, volume_name)
     assert len(volume.replicas) == int(setting.value)
 
@@ -2093,6 +2108,7 @@ def test_attach_without_frontend(client, volume_name):  # NOQA
 
 
 @pytest.mark.coretest  # NOQA
+@pytest.mark.v2   # NOQA
 def test_storage_class_from_backup(set_random_backupstore, volume_name, pvc_name, storage_class, client, core_api, pod_make):  # NOQA
     """
     Test restore backup using StorageClass
@@ -2139,6 +2155,7 @@ def test_storage_class_from_backup(set_random_backupstore, volume_name, pvc_name
 
     storage_class['metadata']['name'] = "longhorn-from-backup"
     storage_class['parameters']['fromBackup'] = backup_url
+    storage_class['parameters']['dataEngine'] = "v2"
 
     create_storage_class(storage_class)
 
@@ -2577,6 +2594,7 @@ def test_restore_inc_with_offline_expansion(set_random_backupstore, client, core
     assert len(volumes) == 0
 
 
+@pytest.mark.v2   # NOQA
 def test_engine_image_daemonset_restart(client, apps_api, volume_name):  # NOQA
     """
     Test restarting engine image daemonset
@@ -3041,6 +3059,7 @@ def test_expansion_with_scheduling_failure(
     delete_and_wait_pv(core_api, test_pv_name)
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_lock_deletion_during_restoration(set_random_backupstore, client, core_api, volume_name, csi_pv, pvc, pod_make):  # NOQA
     """
     Test backup locks
@@ -3078,7 +3097,8 @@ def test_backup_lock_deletion_during_restoration(set_random_backupstore, client,
     wait_for_backup_completion(client, std_volume_name, snap1.name)
 
     _, b = common.find_backup(client, std_volume_name, snap1.name)
-    client.create_volume(name=restore_volume_name, fromBackup=b.url)
+    client.create_volume(name=restore_volume_name, fromBackup=b.url,
+                         dataEngine="v2")
     wait_for_volume_restoration_start(client, restore_volume_name, b.name)
 
     backup_volume = client.by_id_backupVolume(std_volume_name)
@@ -3111,6 +3131,7 @@ def test_backup_lock_deletion_during_restoration(set_random_backupstore, client,
     assert b is None
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_lock_deletion_during_backup(set_random_backupstore, client, core_api, volume_name, csi_pv, pvc, pod_make):  # NOQA
     """
     Test backup locks
@@ -3173,7 +3194,8 @@ def test_backup_lock_deletion_during_backup(set_random_backupstore, client, core
         b1 = None
     assert b1 is None
 
-    client.create_volume(name=restore_volume_name_1, fromBackup=b2.url)
+    client.create_volume(name=restore_volume_name_1, fromBackup=b2.url,
+                         dataEngine="v2")
 
     wait_for_volume_restoration_completed(client, restore_volume_name_1)
     restore_volume_1 = wait_for_volume_detached(client, restore_volume_name_1)
@@ -3194,6 +3216,7 @@ def test_backup_lock_deletion_during_backup(set_random_backupstore, client, core
     assert std_md5sum2 == md5sum2
 
 
+@pytest.mark.v2   # NOQA
 def test_backup_lock_creation_during_deletion(set_random_backupstore, client, core_api, volume_name, csi_pv, pvc, pod_make):  # NOQA
     """
     Test backup locks
@@ -3296,7 +3319,8 @@ def test_backup_lock_restoration_during_deletion(set_random_backupstore, client,
 
     backup_volume.backupDelete(name=b2.name)
 
-    client.create_volume(name=restore_volume_name, fromBackup=b1.url)
+    client.create_volume(name=restore_volume_name, fromBackup=b1.url,
+                         dataEngine="v2")
     wait_for_volume_detached(client, restore_volume_name)
     restore_volume = client.by_id_volume(restore_volume_name)
     assert restore_volume[VOLUME_FIELD_ROBUSTNESS] == VOLUME_ROBUSTNESS_FAULTED
@@ -5127,11 +5151,12 @@ def test_backup_failed_disable_auto_cleanup(set_random_backupstore,  # NOQA
         pytest.param("rwo", "rwx")
     ],
 )
+@pytest.mark.v2   # NOQA
 def test_backup_volume_restore_with_access_mode(core_api, # NOQA
                                                 set_random_backupstore, # NOQA
                                                 client, # NOQA
                                                 access_mode, # NOQA
-                                       overridden_restored_access_mode): # NOQA
+                                                overridden_restored_access_mode): # NOQA
     """
     Test the backup w/ the volume access mode, then restore a volume w/ the
      original access mode or being overridden.
@@ -5149,6 +5174,7 @@ def test_backup_volume_restore_with_access_mode(core_api, # NOQA
                          size=str(DEFAULT_VOLUME_SIZE * Gi),
                          numberOfReplicas=2,
                          accessMode=access_mode,
+                         dataEngine="v2",
                          migratable=True if access_mode == "rwx" else False)
     wait_for_volume_creation(client, test_volume_name)
     volume = wait_for_volume_detached(client, test_volume_name)
@@ -5163,7 +5189,8 @@ def test_backup_volume_restore_with_access_mode(core_api, # NOQA
     client.create_volume(name=volume_name_ori_access_mode,
                          size=str(DEFAULT_VOLUME_SIZE * Gi),
                          numberOfReplicas=2,
-                         fromBackup=b.url)
+                         fromBackup=b.url,
+                         dataEngine="v2")
     volume_ori_access_mode = client.by_id_volume(volume_name_ori_access_mode)
     assert volume_ori_access_mode.accessMode == access_mode
 
@@ -5173,11 +5200,13 @@ def test_backup_volume_restore_with_access_mode(core_api, # NOQA
                          size=str(DEFAULT_VOLUME_SIZE * Gi),
                          numberOfReplicas=2,
                          accessMode=overridden_restored_access_mode,
-                         fromBackup=b.url)
+                         fromBackup=b.url,
+                         dataEngine="v2")
     volume_sp_access_mode = client.by_id_volume(volume_name_sp_access_mode)
     assert volume_sp_access_mode.accessMode == overridden_restored_access_mode
 
 
+@pytest.mark.v2   # NOQA
 def test_delete_backup_during_restoring_volume(set_random_backupstore, client):  # NOQA
     """
     Test delete backup during restoring volume
@@ -5213,7 +5242,8 @@ def test_delete_backup_during_restoring_volume(set_random_backupstore, client): 
     client.create_volume(name=vol_v2_name,
                          size=str(512 * Mi),
                          numberOfReplicas=3,
-                         fromBackup=b.url)
+                         fromBackup=b.url,
+                         dataEngine="v2")
 
     delete_backup(client, bv.name, b.name)
     volume = wait_for_volume_status(client, vol_v1_name,
@@ -5504,6 +5534,7 @@ def test_filesystem_trim(client, fs_type):  # NOQA
     wait_for_volume_delete(client, test_volume_name)
 
 
+@pytest.mark.v2   # NOQA
 def test_backuptarget_invalid(apps_api, # NOQA
                               client, # NOQA
                               core_api, # NOQA
@@ -5564,6 +5595,7 @@ def test_backuptarget_invalid(apps_api, # NOQA
 
 
 @pytest.mark.volume_backup_restore   # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_backup_and_restore_with_lz4_compression_method(client, set_random_backupstore, volume_name):  # NOQA
     """
     Scenario: test volume backup and restore with different compression methods
@@ -5596,6 +5628,7 @@ def test_volume_backup_and_restore_with_lz4_compression_method(client, set_rando
 
 
 @pytest.mark.volume_backup_restore   # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_backup_and_restore_with_gzip_compression_method(client, set_random_backupstore, volume_name):  # NOQA
     """
     Scenario: test volume backup and restore with different compression methods
@@ -5628,6 +5661,7 @@ def test_volume_backup_and_restore_with_gzip_compression_method(client, set_rand
 
 
 @pytest.mark.volume_backup_restore   # NOQA
+@pytest.mark.v2   # NOQA
 def test_volume_backup_and_restore_with_none_compression_method(client, set_random_backupstore, volume_name):  # NOQA
     """
     Scenario: test volume backup and restore with different compression methods

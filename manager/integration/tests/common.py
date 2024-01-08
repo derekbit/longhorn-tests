@@ -141,7 +141,7 @@ CONDITION_REASON_SCHEDULING_FAILURE = "ReplicaSchedulingFailure"
 VOLUME_FRONTEND_BLOCKDEV = "blockdev"
 VOLUME_FRONTEND_ISCSI = "iscsi"
 
-DEFAULT_DISK_PATH = "/var/lib/longhorn/"
+DEFAULT_DISK_PATH = "/dev/loop10"
 DEFAULT_STORAGE_OVER_PROVISIONING_PERCENTAGE = "100"
 DEFAULT_STORAGE_MINIMAL_AVAILABLE_PERCENTAGE = "10"
 DEFAULT_LONGHORN_STATIC_STORAGECLASS_NAME = "longhorn-static"
@@ -490,7 +490,8 @@ def delete_backup_volume(client, volume_name):
 def create_and_check_volume(client, volume_name,
                             num_of_replicas=3, size=SIZE, backing_image="",
                             frontend=VOLUME_FRONTEND_BLOCKDEV,
-                            snapshot_data_integrity=SNAPSHOT_DATA_INTEGRITY_IGNORED): # NOQA
+                            snapshot_data_integrity=SNAPSHOT_DATA_INTEGRITY_IGNORED,
+                            data_engine="v2"): # NOQA
     """
     Create a new volume with the specified parameters. Assert that the new
     volume is detached and that all of the requested parameters match.
@@ -509,7 +510,8 @@ def create_and_check_volume(client, volume_name,
     client.create_volume(name=volume_name, size=size,
                          numberOfReplicas=num_of_replicas,
                          backingImage=backing_image, frontend=frontend,
-                         snapshotDataIntegrity=snapshot_data_integrity)
+                         snapshotDataIntegrity=snapshot_data_integrity,
+                         dataEngine=data_engine)
     volume = wait_for_volume_detached(client, volume_name)
     assert volume.name == volume_name
     assert volume.size == size
@@ -1739,10 +1741,6 @@ def cleanup_client():
     reset_engine_image(client)
     wait_for_all_instance_manager_running(client)
 
-    # check replica subdirectory of default disk path
-    if not os.path.exists(DEFAULT_REPLICA_DIRECTORY):
-        subprocess.check_call(
-            ["mkdir", "-p", DEFAULT_REPLICA_DIRECTORY])
 
 
 def reset_nodes_taint(client):
@@ -3383,6 +3381,7 @@ def reset_disks_for_all_nodes(client):  # NOQA
         if len(node.disks) == 0:
             default_disk = {"default-disk":
                             {"path": DEFAULT_DISK_PATH,
+                             "diskType": "block",
                              "allowScheduling": True}}
             node = update_node_disks(client, node.name, disks=default_disk,
                                      retry=True)
@@ -3394,8 +3393,7 @@ def reset_disks_for_all_nodes(client):  # NOQA
         for name, disk in iter(disks.items()):
             update_disk = disk
             update_disk.allowScheduling = True
-            update_disk.storageReserved = \
-                int(update_disk.storageMaximum * 30 / 100)
+            update_disk.storageReserved = 0
             update_disk.tags = []
             update_disks[name] = update_disk
         node = update_node_disks(client, node.name, disks=update_disks,
@@ -3407,8 +3405,7 @@ def reset_disks_for_all_nodes(client):  # NOQA
             wait_for_disk_status(client, node.name, name,
                                  "storageScheduled", 0)
             wait_for_disk_status(client, node.name, name,
-                                 "storageReserved",
-                                 int(update_disk.storageMaximum * 30 / 100))
+                                 "storageReserved", 0)
 
 
 def reset_settings(client):
@@ -3440,6 +3437,12 @@ def reset_settings(client):
             continue
 
         if setting_name == "registry-secret":
+            continue
+        
+        if setting_name == "v1-data-engine":
+            continue
+
+        if setting_name == "v2-data-engine":
             continue
 
         s = client.by_id_setting(setting_name)
@@ -5508,7 +5511,7 @@ def restore_backup_and_get_data_checksum(client, core_api, backup, pod,
     data_checksum = {}
 
     client.create_volume(name=restore_volume_name, size=str(1 * Gi),
-                         fromBackup=backup.url)
+                         fromBackup=backup.url, dataEngine="v2")
     volume = wait_for_volume_detached(client, restore_volume_name)
     create_pv_for_volume(client, core_api, volume, restore_pv_name)
     create_pvc_for_volume(client, core_api, volume, restore_pvc_name)
@@ -5857,6 +5860,7 @@ def enable_default_disk(client):
         if disk["path"] == DEFAULT_DISK_PATH:
             disk.allowScheduling = True
             disk.evictionRequested = False
+            disk.diskType = "block"
 
     update_node_disks(client, node.name, disks=disks, retry=True)
 
