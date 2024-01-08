@@ -146,6 +146,7 @@ def reset_disk_settings():
 
 @pytest.mark.coretest   # NOQA
 @pytest.mark.node  # NOQA
+@pytest.mark.v2   # NOQA
 def test_update_node(client):  # NOQA
     """
     Test update node scheduling
@@ -282,6 +283,7 @@ def test_node_disk_update(client):  # NOQA
 
 @pytest.mark.coretest   # NOQA
 @pytest.mark.node  # NOQA
+@pytest.mark.v2   # NOQA
 def test_replica_scheduler_no_disks(client):  # NOQA
     """
     Test replica scheduler with no disks available
@@ -317,7 +319,8 @@ def test_replica_scheduler_no_disks(client):  # NOQA
     # test there's no disk fit for volume
     vol_name = common.generate_volume_name()
     volume = client.create_volume(name=vol_name,
-                                  size=SIZE, numberOfReplicas=len(nodes))
+                                  size=SIZE, numberOfReplicas=len(nodes),
+                                  dataEngine="v2")
     volume = common.wait_for_volume_condition_scheduled(client, vol_name,
                                                         "status",
                                                         CONDITION_STATUS_FALSE)
@@ -374,7 +377,8 @@ def test_disable_scheduling_on_cordoned_node(client,  # NOQA
     # Create a volume
     vol_name = common.generate_volume_name()
     client.create_volume(name=vol_name, size=SIZE,
-                         numberOfReplicas=len(nodes))
+                         numberOfReplicas=len(nodes),
+                         dataEngine="v2")
     common.wait_for_volume_detached(client, vol_name)
 
     # Set uncordon on node
