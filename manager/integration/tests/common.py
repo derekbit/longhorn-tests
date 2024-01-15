@@ -1487,7 +1487,7 @@ def rwx_statefulset(request):
                     'accessModes': [
                         'ReadWriteMany'
                     ],
-                    'storageClassName': 'longhorn',
+                    'storageClassName': DEFAULT_STORAGECLASS_NAME,
                     'resources': {
                         'requests': {
                             'storage': size_to_string(

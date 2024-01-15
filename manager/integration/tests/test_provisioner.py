@@ -26,7 +26,9 @@ def create_storage(api, sc_manifest, pvc_manifest):
         body=pvc_manifest,
         namespace='default')
 
+
 @pytest.mark.coretest   # NOQA
+@pytest.mark.v2   # NOQA
 def test_provisioner_mount(client, core_api, storage_class, pvc, pod):  # NOQA
     """
     Test that a StorageClass provisioned volume can be created, mounted,
@@ -49,6 +51,7 @@ def test_provisioner_mount(client, core_api, storage_class, pvc, pod):  # NOQA
     storage_class['metadata']['name'] = DEFAULT_STORAGECLASS_NAME
     volume_size = DEFAULT_VOLUME_SIZE * Gi
 
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage(core_api, storage_class, pvc)
     create_and_wait_pod(core_api, pod)
     pvc_volume_name = get_volume_name(core_api, pvc['metadata']['name'])
@@ -63,6 +66,7 @@ def test_provisioner_mount(client, core_api, storage_class, pvc, pod):  # NOQA
     assert volumes.data[0].state == "attached"
 
 
+@pytest.mark.v2   # NOQA
 def test_provisioner_params(client, core_api, storage_class, pvc, pod):  # NOQA
     """
     Test that substituting different StorageClass parameters is reflected in
@@ -89,7 +93,8 @@ def test_provisioner_params(client, core_api, storage_class, pvc, pod):  # NOQA
     storage_class['metadata']['name'] = DEFAULT_STORAGECLASS_NAME
     storage_class['parameters'] = {
         'numberOfReplicas': '2',
-        'staleReplicaTimeout': '20'
+        'staleReplicaTimeout': '20',
+        'dataEngine': 'v2'
     }
 
     create_storage(core_api, storage_class, pvc)
@@ -106,6 +111,7 @@ def test_provisioner_params(client, core_api, storage_class, pvc, pod):  # NOQA
     assert volumes.data[0].state == "attached"
 
 
+@pytest.mark.v2   # NOQA
 def test_provisioner_io(client, core_api, storage_class, pvc, pod):  # NOQA
     """
     Test that input and output on a StorageClass provisioned
@@ -129,6 +135,7 @@ def test_provisioner_io(client, core_api, storage_class, pvc, pod):  # NOQA
     ]
     pvc['spec']['storageClassName'] = DEFAULT_STORAGECLASS_NAME
     storage_class['metadata']['name'] = DEFAULT_STORAGECLASS_NAME
+    storage_class['parameters']['dataEngine'] = 'v2'
     test_data = generate_random_data(VOLUME_RWTEST_SIZE)
 
     create_storage(core_api, storage_class, pvc)
@@ -147,6 +154,7 @@ def test_provisioner_io(client, core_api, storage_class, pvc, pod):  # NOQA
     assert resp == test_data
 
 
+@pytest.mark.v2   # NOQA
 def test_provisioner_tags(client, core_api, node_default_tags, storage_class, pvc, pod):  # NOQA
     """
     Test that a StorageClass can properly provision a volume with requested
@@ -181,6 +189,7 @@ def test_provisioner_tags(client, core_api, node_default_tags, storage_class, pv
     storage_class['metadata']['name'] = DEFAULT_STORAGECLASS_NAME
     storage_class['parameters']['diskSelector'] = 'ssd,nvme'
     storage_class['parameters']['nodeSelector'] = 'storage,main'
+    storage_class['parameters']['dataEngine'] = 'v2'
     volume_size = DEFAULT_VOLUME_SIZE * Gi
 
     create_storage(core_api, storage_class, pvc)
@@ -198,11 +207,11 @@ def test_provisioner_tags(client, core_api, node_default_tags, storage_class, pv
     check_volume_replicas(volumes.data[0], tag_spec, node_default_tags)
 
 
+@pytest.mark.v2   # NOQA
 @pytest.mark.parametrize(
     "inode_size,block_size",
     [
-        pytest.param("512", "2048"),
-        pytest.param("1024", "1024")
+        pytest.param("1024", "4096")
     ],
 )
 def test_provisioner_fs_format(client, core_api, storage_class, # NOQA
@@ -228,6 +237,7 @@ def test_provisioner_fs_format(client, core_api, storage_class, # NOQA
     storage_class['metadata']['name'] = DEFAULT_STORAGECLASS_NAME
     storage_class['parameters']['mkfsParams'] = \
         "-I {} -b {} -O ^metadata_csum,^64bit".format(inode_size, block_size)
+    storage_class['parameters']['dataEngine'] = 'v2'
 
     create_storage(core_api, storage_class, pvc)
     create_and_wait_pod(core_api, pod)

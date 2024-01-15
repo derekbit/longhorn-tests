@@ -54,6 +54,7 @@ def create_pv_storage(api, cli, pv, claim, backing_image, from_backup):
         name=pv['metadata']['name'], size=pv['spec']['capacity']['storage'],
         numberOfReplicas=int(pv['spec']['csi']['volumeAttributes']
                              ['numberOfReplicas']),
+        dataEngine='v2',
         backingImage=backing_image, fromBackup=from_backup)
     if from_backup:
         common.wait_for_volume_restoration_completed(cli,
@@ -102,6 +103,7 @@ def create_and_wait_csi_pod_named_pv(pv_name, pod_name, client, core_api, csi_pv
 
 @pytest.mark.coretest   # NOQA
 @pytest.mark.csi  # NOQA
+@pytest.mark.v2   # NOQA
 def test_csi_mount(client, core_api, csi_pv, pvc, pod_make):  # NOQA
     """
     Test that a statically defined CSI volume can be created, mounted,
@@ -141,6 +143,7 @@ def csi_mount_test(client, core_api, csi_pv, pvc, pod_make,  # NOQA
 
 
 @pytest.mark.csi  # NOQA
+@pytest.mark.v2   # NOQA
 def test_csi_io(client, core_api, csi_pv, pvc, pod_make):  # NOQA
     """
     Test that input and output on a statically defined CSI volume works as
@@ -192,6 +195,7 @@ def csi_io_test(client, core_api, csi_pv, pvc, pod_make, backing_image=""):  # N
 
 
 @pytest.mark.csi  # NOQA
+@pytest.mark.v2   # NOQA
 def test_csi_backup(set_random_backupstore, client, core_api, csi_pv, pvc, pod_make):  # NOQA
     """
     Test that backup/restore works with volumes created by CSI driver.
@@ -246,6 +250,7 @@ def backupstore_test(client, core_api, csi_pv, pvc, pod_make, pod_name, vol_name
 
 
 @pytest.mark.csi  # NOQA
+@pytest.mark.v2   # NOQA
 def test_csi_block_volume(client, core_api, storage_class, pvc, pod_manifest):  # NOQA
     """
     Test CSI feature: raw block volume
@@ -260,6 +265,7 @@ def test_csi_block_volume(client, core_api, storage_class, pvc, pod_manifest):  
     """
 
     storage_class['reclaimPolicy'] = 'Retain'
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
 
     create_and_verify_block_volume(client, core_api, storage_class, pvc,
@@ -290,6 +296,7 @@ def test_csi_encrypted_block_volume(client, core_api, storage_class, crypto_secr
     storage_class['parameters']['csi.storage.k8s.io/node-publish-secret-namespace'] = LONGHORN_NAMESPACE  # NOQA
     storage_class['parameters']['csi.storage.k8s.io/node-stage-secret-name'] = 'longhorn-crypto'  # NOQA
     storage_class['parameters']['csi.storage.k8s.io/node-stage-secret-namespace'] = LONGHORN_NAMESPACE  # NOQA
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
 
     create_and_verify_block_volume(client, core_api, storage_class, pvc,
@@ -371,6 +378,8 @@ def test_csi_offline_expansion(client, core_api, storage_class, pvc, pod_manifes
     6. Verify the volume expansion done using Longhorn API
     7. Create a new pod and validate the volume content
     """
+
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
 
     pod_name = 'csi-offline-expand-volume-test'
@@ -463,6 +472,8 @@ def test_csi_block_volume_online_expansion(client, core_api, storage_class, pvc,
     9. Wait for the calculation complete, then compare the checksum.
     10. Do cleanup: Remove the original `test_data`as well as the pod and PVC.
     """
+
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
     pod_dev_volume_path = "/dev/longhorn/testblk"
 
@@ -543,6 +554,8 @@ def test_csi_mount_volume_online_expansion(client, core_api, storage_class, pvc,
     9. Wait for the calculation complete, then compare the checksum.
     10. Do cleanup: Remove the original `test_data`as well as the pod and PVC.
     """
+
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
     volume_data_path = "/data/file"
 
@@ -595,6 +608,7 @@ def test_csi_mount_volume_online_expansion(client, core_api, storage_class, pvc,
     assert md5_after_expanding == md5_before_expanding
 
 
+@pytest.mark.v2   # NOQA
 def test_xfs_pv(client, core_api, pod_manifest):  # NOQA
     """
     Test create PV with new XFS filesystem
@@ -633,6 +647,7 @@ def test_xfs_pv(client, core_api, pod_manifest):  # NOQA
     assert resp == test_data
 
 
+@pytest.mark.v2   # NOQA
 def test_xfs_pv_existing_volume(client, core_api, pod_manifest):  # NOQA
     """
     Test create PV with existing XFS filesystem
@@ -697,6 +712,7 @@ def test_csi_expansion_with_replica_failure(client, core_api, storage_class, pvc
         client.by_id_setting(SETTING_REPLICA_REPLENISHMENT_WAIT_INTERVAL)
     client.update(replenish_wait_setting, value="600")
 
+    storage_class['parameters']['dataEngine'] = 'v2'
     create_storage_class(storage_class)
 
     pod_name = 'csi-expansion-with-replica-failure-test'
@@ -869,6 +885,7 @@ def test_allow_volume_creation_with_degraded_availability_csi(
 
 
 @pytest.mark.csi  # NOQA
+@pytest.mark.v2   # NOQA
 def test_csi_minimal_volume_size(
     client, core_api, csi_pv, pvc, pod_make): # NOQA
     """
