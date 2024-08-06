@@ -135,6 +135,13 @@ def check_pod_data_checksum(expected_checksum, pod_name, file_name, data_directo
 
     retry_count, retry_interval = get_retry_count_and_interval()
 
+
+def check_pod_data_checksum(expected_checksum, pod_name, file_name, data_directory="/data"):
+
+    wait_for_pod_status(pod_name, "Running")
+
+    retry_count, retry_interval = get_retry_count_and_interval()
+
     for _ in range(retry_count):
         try:
             file_path = f"{data_directory}/{file_name}"
