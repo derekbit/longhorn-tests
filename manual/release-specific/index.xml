@@ -6,5 +6,50 @@
     <description>Recent content in Release specific tests on Longhorn Manual Test Cases</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="https://longhorn.github.io/longhorn-tests/manual/release-specific/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Backups And System Backups Removed During Uninstalling</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-backups-and-system-backups-removed-during-uninstalling/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-backups-and-system-backups-removed-during-uninstalling/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/10104  LEP  https://github.com/longhorn/longhorn/pull/5411  Test Uninstall Longhorn After An Upgrade Given a Longhorn 1.7.x cluster with 3 worker nodes.
+AND the default backup target is set.
+When volumes, completed backups, failed backups, and a system backup are created.
+And Longhorn is upgraded to v1.8.0.
+Then Upgrade successfully.
+And the OwnerReference of the system backup is added.
+When Longhorn is uninstalled.
+Then the uninstallation completes successfully.</description>
+    </item>
+    
+    <item>
+      <title>Delete Backup Asynchronously</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-delete-backup-asynchronously/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-delete-backup-asynchronously/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/8746  LEP  https://github.com/longhorn/longhorn/pull/9152  Test Normal Case (use nfs) Given Longhorn cluster with 3 worker nodes.
+And Create a volume and attach it.
+And Write large data to the volume.
+And Create the first backup from the volume.
+And Write small data to the volume.
+And Create a snapshot.
+Then Delete the first backup and create second backup from the snapshot at the same time.</description>
+    </item>
+    
+    <item>
+      <title>Multiple Backup Stores</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-multiple-backup-stores/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.8.0/test-multiple-backup-stores/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/5411  LEP  https://github.com/longhorn/longhorn/pull/6630  Test Update Default Backup Target Given Longhorn cluster with 3 worker nodes installed with Helm.
+Verify The ConfigMap longhorn-default-backupstore is created.
+Then Update the setting defaultBackupStore.backupTarget in the file values.yaml.
+Verify The default backup target URL is updated as the value of the setting defaultBackupStore.backupTarget.
+Then Update the setting defaultBackupStore.backupTargetCredentialSecret in the file values.yaml.
+Verify The default backup target secret is updated as the value of the setting defaultBackupStore.</description>
+    </item>
+    
   </channel>
 </rss>

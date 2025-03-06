@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>v1.7.0 on Longhorn Manual Test Cases</title>
+    <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/</link>
+    <description>Recent content in v1.7.0 on Longhorn Manual Test Cases</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dependency setup for GKE cluster using Container-Optimized OS as base image</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-gke-container-optimized-os-dependency-setup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-gke-container-optimized-os-dependency-setup/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/6165  Test step Given GKE cluster using Continer-Optimized OS (COS_CONTAINER) as the base image.
+When Follow instruction to deploy the Longhorn GKE COS node agent.
+Then Follow the instruction to verify dependency configuration/setup.
+And Integration tests should pass.</description>
+    </item>
+    
+    <item>
+      <title>Longhorn Commandline Interface (longhornctl)</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-longhorn-cli-longhornctl/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-longhorn-cli-longhornctl/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/7927  Test install preflight Given longhornctl binary.
+And longhornctl image.
+When Execute longhornctl install preflight.
+&amp;gt; ./bin/longhornctl -l debug --image=&amp;#34;c3y1huang/research:longhornctl-407&amp;#34; install preflight Then Command should succeed.
+INFO[2024-06-24T10:23:16+08:00] Completed preflight installer. Use &#39;longhornctl check preflight&#39; to check the result. Test check preflight Given longhornctl binary.
+And longhornctl image.
+When Execute longhornctl check preflight.
+&amp;gt; ./bin/longhornctl -l debug --image=&amp;#34;c3y1huang/research:longhornctl-407&amp;#34; check preflight Then Command should show result.
+INFO[2024-06-24T10:24:54+08:00] Retrieved preflight checker result: ip-10-0-2-106: info: - Service iscsid is running - NFS4 is supported - Package nfs-client is installed - Package open-iscsi is installed - CPU instruction set sse4_2 is supported - HugePages is enabled - Module nvme_tcp is loaded - Module uio_pci_generic is loaded ip-10-0-2-181: info: - Service iscsid is running - NFS4 is supported - Package nfs-client is installed - Package open-iscsi is installed - CPU instruction set sse4_2 is supported - HugePages is enabled - Module nvme_tcp is loaded - Module uio_pci_generic is loaded ip-10-0-2-219: info: - Service iscsid is running - NFS4 is supported - Package nfs-client is installed - Package open-iscsi is installed - CPU instruction set sse4_2 is supported - HugePages is enabled - Module nvme_tcp is loaded - Module uio_pci_generic is loaded And Command should succeed.</description>
+    </item>
+    
+    <item>
+      <title>Node Disk Support</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-node-disk-support/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-node-disk-support/</guid>
+      <description>Longhorn now enhances filesystem operations, storage performance, and compatibility by supporting the addition and management of various disk types on nodes, including AIO, NVMe, and VirtIO.
+Related issues  https://github.com/longhorn/longhorn/issues/7672  Precondition  https://longhorn.io/docs/1.7.0/v2-data-engine/quick-start/#prerequisites  Test the detection of NVMe disk When Create a LH clusters using AWS EC2 c5d.2xlarge instance with a NVMe disk And Check available block devices on a system by lsblk or fdisk -l
+# lsblk NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS loop0 7:0 0 55.</description>
+    </item>
+    
+    <item>
+      <title>restarting Kubelet should not result in repeated &#34;no Pending workload pods ...&#34; event for the workload pod.</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-kubelet-restart-no-pending-pod-event/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-kubelet-restart-no-pending-pod-event/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/8072  Test step Given A deployment is created.
+When Kubelet on the node with attached volume of the deployment is restarted.
+systemctl restart k3s-agent.service Then Observe the events of the deployment pod.
+kubectl get events --field-selector involvedObject.name=${POD_NAME} -w And There are no recurring no Pending workload pods for volume xxx to be mounted events.</description>
+    </item>
+    
+    <item>
+      <title>RWX Fast Failover</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-rwx-fast-failover/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-rwx-fast-failover/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/6205  LEP  https://github.com/longhorn/longhorn/pull/9069  Test Failover with I/O Given Longhorn cluster with 3 worker nodes.
+And Enable the feature by setting rwx-enable-fast-failover to true. Ensure that setting auto-delete-pod-when-volume-detached-unexpectedly is set to its default value of true.
+And Deploy an RWX volume with default storage class. Run an app pod with the RWX volume on each worker node. Execute the command in each app pod
+ `( exec 7&amp;lt;&amp;gt;/data/testfile-${i}; flock -x 7; while date | dd conv=fsync &amp;gt;&amp;amp;7 ; do sleep 1; done )` where ${i} is the node number.</description>
+    </item>
+    
+    <item>
+      <title>Storage Network Support for RWX Volume</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-storage-network-support-for-rwx-volume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-storage-network-support-for-rwx-volume/</guid>
+      <description>Related Issues  https://github.com/longhorn/longhorn/issues/8184  Test Longhorn Upgrade with Pre-existing RWX Volume Workloads and Storage Network Configured Verify the behavior of Longhorn RWX volume workloads during and after the cluster upgrade process with existing storage network configured. Ensure no disruption to existing workload pods during the upgrade.
+Given A cluster with Longhorn v1.6.2 installed.
+&amp;gt; kubectl -n longhorn-system get daemonsets.apps longhorn-manager -o yaml | grep image: image: longhornio/longhorn-manager:v1.6.2 And The storage-network setting is set to a valid NAD.</description>
+    </item>
+    
+    <item>
+      <title>Support bundle node collection timeout</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-support-bundle-node-collection-timeout/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-support-bundle-node-collection-timeout/</guid>
+      <description>When the timeout expires, the support bundle generation will proceed without requiring the collection of node bundles.
+Related issues  https://github.com/longhorn/longhorn/issues/8623  Test support bundle image supports node collection timeout Given Run the support bundle manager image (version 0.0.38 or later) using Docker.
+&amp;gt; docker run -it longhornio/support-bundle-kit:v0.0.38 bash When Execute support-bundle-kit manager --help.
+Then The help menu displays the --node-timeout option.
+&amp;gt; support-bundle-kit manager --help | grep node-timeout --node-timeout duration The support bundle node collection time out Test support-bundle-node-collection-timeout setting Given Simulate the node bundle blockage by patching the rancher/support-bundle-kit code base and create an image.</description>
+    </item>
+    
+    <item>
+      <title>System Packages Are Up-to-date During Image Build</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-build-image-package-up-to-date/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.7.0/test-build-image-package-up-to-date/</guid>
+      <description>Related issues  https://github.com/longhorn/longhorn/issues/8721  Test step Given Build Longhorn component images manually.
+ longhorn-cli longhorn-engine longhorn-instance-manager longhorn-share-manager longhorn-ui  When Run a shell within Longhorn component images using Docker.
+docker run --entrypoint bash --user root -it &amp;lt;IMAGE&amp;gt; And Execute zypper ref &amp;amp;&amp;amp; zypper update command inside the container.
+Then Verify that the command outputs Nothing to do.
+&amp;gt; zypper ref &amp;amp;&amp;amp; zypper update Refreshing service &amp;#39;container-suseconnect-zypp&amp;#39;. Retrieving repository &amp;#39;SLE_BCI&amp;#39; metadata .</description>
+    </item>
+    
+  </channel>
+</rss>

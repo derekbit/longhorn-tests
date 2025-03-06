@@ -14,12 +14,11 @@
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/deployment/</guid>
       <description>Installation Longhorn v1.1.2 and above - Support Kubernetes 1.18+
 Longhorn v1.0.0 to v1.1.1 - Support Kubernetes 1.14+. Default 1.16+
-Install using Rancher Apps &amp;amp; MarketPlace App (Default)
-Install using Helm chart from https://github.com/longhorn/longhorn/tree/master/chart
-Install using YAML from https://github.com/longhorn/longhorn/blob/master/deploy/longhorn.yaml
-Note: Longhorn UI can scale to multiple instances for HA purposes.
-Uninstallation Make sure all the CRDs and other resources are cleaned up, following the uninstallation instruction. https://longhorn.io/docs/1.2.2/deploy/uninstall/
-Customizable Default Settings https://longhorn.io/docs/1.2.2/references/settings/</description>
+  Install using Rancher Apps &amp;amp; MarketPlace App (Default)
+  Install using Helm chart from https://github.com/longhorn/longhorn/tree/master/chart
+  Install using YAML from https://github.com/longhorn/longhorn/blob/master/deploy/longhorn.yaml
+  Note: Longhorn UI can scale to multiple instances for HA purposes.
+Uninstallation Make sure all the CRDs and other resources are cleaned up, following the uninstallation instruction.</description>
     </item>
     
     <item>
@@ -28,12 +27,11 @@ Customizable Default Settings https://longhorn.io/docs/1.2.2/references/settings
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/ui/</guid>
-      <description>Accessibility of Longhorn UI # Test Case Test Instructions 1. Access Longhorn UI using rancher proxy 1. Create a cluster (3 worker nodes and 1 etcd/control plane) in rancher, Go to the default project.
+      <description>Accessibility of Longhorn UI    # Test Case Test Instructions     1. Access Longhorn UI using rancher proxy 1. Create a cluster (3 worker nodes and 1 etcd/control plane) in rancher, Go to the default project.
 2. Go to App, Click the launch app.
 3. Select longhorn.
 4. Select Rancher-Proxy under the Longhorn UI service.
-5. Once the app is deployed successfully, click the /index.html link appears in App page.
-6. The page should redirect to longhorn UI - https://rancher/k8s/clusters/c-aaaa/api/v1/namespaces/longhorn-system/services/http:longhorn-frontend:80/proxy/#/dashboard</description>
+5. Once the app is deployed successfully, click the /index.html link appears in App page.</description>
     </item>
     
     <item>
@@ -42,16 +40,14 @@ Customizable Default Settings https://longhorn.io/docs/1.2.2/references/settings
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/volume/</guid>
-      <description>Test cases for Volume # Test Case Test Instructions Expected Results 1 Check volume Details Prerequisite:
+      <description>Test cases for Volume    # Test Case Test Instructions Expected Results     1 Check volume Details Prerequisite:
 * Longhorn Nodes has node tags
 * Node Disks has disk tags
 * Backup target is set to NFS server, or S3 compatible target
 1. Create a workload using Longhorn volume
 2. Check volume details page
 3. Create volume backup * Volume Details
-* State should be Attached
-* Health should be healthy
-* Frontend should be Block Device</description>
+* State should be Attached</description>
     </item>
     
     <item>
@@ -60,11 +56,10 @@ Customizable Default Settings https://longhorn.io/docs/1.2.2/references/settings
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/kubernetes/</guid>
-      <description>Dynamic provisioning with StorageClass Can create and use volume using StorageClass
-Can create a new StorageClass use new parameters and it will take effect on the volume created by the storage class.
-If the PV reclaim policy is delete, once PVC and PV are deleted, Longhorn volume should be deleted.
-Static provisioning using Longhorn created PV/PVC PVC can be used by the new workload
-Delete the PVC will not result in PV deletion</description>
+      <description>Dynamic provisioning with StorageClass   Can create and use volume using StorageClass
+  Can create a new StorageClass use new parameters and it will take effect on the volume created by the storage class.
+  If the PV reclaim policy is delete, once PVC and PV are deleted, Longhorn volume should be deleted.
+  Static provisioning using Longhorn created PV/PVC   PVC can be used by the new workload</description>
     </item>
     
     <item>
@@ -73,15 +68,14 @@ Delete the PVC will not result in PV deletion</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/backup/</guid>
-      <description>Automation Tests # Test name Description tag 1 test_backup Test basic backup
+      <description>Automation Tests    # Test name Description tag     1 test_backup Test basic backup
 Setup:
 1. Create a volume and attach to the current node
 2. Run the test for all the available backupstores.
 Steps:
 1. Create a backup of volume
 2. Restore the backup to a new volume
-3. Attach the new volume and make sure the data is the same as the old one
-4. Detach the volume and delete the backup.</description>
+3. Attach the new volume and make sure the data is the same as the old one</description>
     </item>
     
     <item>
@@ -90,7 +84,7 @@ Steps:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/node/</guid>
-      <description>UI specific test cases # Test Case Test Instructions Expected Results 1 Storage details * Prerequisites
+      <description>UI specific test cases    # Test Case Test Instructions Expected Results     1 Storage details * Prerequisites
 * Longhorn Installed
 1. Verify the allocated/used storage show the right data in node details page.
 2. Create a volume of 20 GB and attach to a pod and verify the storage allocated/used is shown correctly. Without any volume, allocated should be 0 and on creating new volume it should be updated as per volume present.</description>
@@ -102,7 +96,7 @@ Steps:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/scheduling/</guid>
-      <description>Manual Test Test name Prerequisite Expectation EKS across zone scheduling Prerequisite:
+      <description>Manual Test    Test name Prerequisite Expectation     EKS across zone scheduling Prerequisite:
 * EKS Cluster with 3 nodes across two AWS zones (zone#1, zone#2)
 1. Create a volume with 2 replicas, and attach it to a node.
 2. Delete a replica scheduled to each zone, repeat it few times
@@ -116,15 +110,14 @@ Steps:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/upgrade/</guid>
-      <description># Test name Description 1 Higher version of Longhorn engine and lower version of volume Test Longhorn upgrade
+      <description># Test name Description     1 Higher version of Longhorn engine and lower version of volume Test Longhorn upgrade
 1. Create a volume, generate and write data into the volume.
 2. Keep the volume attached, then upgrade Longhorn system.
 3. Write data in volume.
 4. Take snapshot#1. Compute the checksum#1
 5. Write data to volume. Compute the checksum#2
 6. Take backup
-7. Revert to snapshot#1
-8. Restore the backup. 2 Restore the backup taken with older engine version 1.</description>
+7. Revert to snapshot#1</description>
     </item>
     
     <item>
@@ -133,7 +126,7 @@ Steps:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://longhorn.github.io/longhorn-tests/manual/functional-test-cases/monitoring/</guid>
-      <description>Prometheus Support test cases Install the Prometheus Operator (include a role and service account for it). For example:apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: prometheus-operator namespace: default roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: prometheus-operator subjects:
+      <description>Prometheus Support test cases  Install the Prometheus Operator (include a role and service account for it). For example:apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: prometheus-operator namespace: default roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: prometheus-operator subjects:
 - kind: ServiceAccount name: prometheus-operator namespace: default
 &amp;ndash; apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRole metadata: name: prometheus-operator namespace: default rules:
 - apiGroups:
