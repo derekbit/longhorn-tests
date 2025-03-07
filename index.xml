@@ -1540,6 +1540,22 @@ Scenario-1  Create a volume with 3 replicas and attach to a pod. Write some data
     </item>
     
     <item>
+      <title>Test Support Bundle Extended Collection</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.9.0/test-support-bundle-extended-collection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.9.0/test-support-bundle-extended-collection/</guid>
+      <description>Related issue https://github.com/longhorn/longhorn/issues/6754
+Test /proc/mounts file Given Longhorn installed
+When generated support-bundle
+And proc_mounts file should exist in support-bundle/nodes//hostinfo/
+Test multipath.config file Given Longhorn installed
+And /etc/multipath.config exists on cluster nodes
+When generated support-bundle
+And multipath.config should exist in support-bundle/nodes//hostinfo/</description>
+    </item>
+    
+    <item>
       <title>Test Support Bundle Metadata File</title>
       <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.6.0/test-support-bundle-metadata-file/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -1674,6 +1690,21 @@ Test step Given Patch build and deploy Longhorn.
 diff --git a/controller/setting_controller.go b/controller/setting_controller.go index de77b7246..ac6263ac5 100644 --- a/controller/setting_controller.go +++ b/controller/setting_controller.go @@ -49,7 +49,7 @@ const ( var ( upgradeCheckInterval = time.Hour settingControllerResyncPeriod = time.Hour -	checkUpgradeURL = &amp;quot;https://longhorn-upgrade-responder.rancher.io/v1/checkupgrade&amp;quot; +	checkUpgradeURL = &amp;quot;http://longhorn-upgrade-responder.default.svc.cluster.local:8314/v1/checkupgrade&amp;quot; ) type SettingController struct {  Match the checkUpgradeURL with the application name: http://&amp;lt;APP_NAME&amp;gt;-upgrade-responder.default.svc.cluster.local:8314/v1/checkupgrade
  And Deploy upgrade responder stack.
 When Wait 1~2 hours for collection data to send to the influxDB database.</description>
+    </item>
+    
+    <item>
+      <title>Test upgrade responder extended collection</title>
+      <link>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.9.0/test-upgrade-responder-extended-collection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://longhorn.github.io/longhorn-tests/manual/release-specific/v1.9.0/test-upgrade-responder-extended-collection/</guid>
+      <description>Related issue  https://github.com/longhorn/longhorn/issues/7047 https://github.com/longhorn/longhorn/issues/7599  Test step Given Deploy upgrade responder stack.
+And Update upgrade-responder-url setting to http://longhorn-upgrade-responder.default.svc.cluster.local:8314/v1/checkupgrade
+&amp;gt; k -n longhorn-system get setting upgrade-responder-url NAME VALUE APPLIED AGE upgrade-responder-url http://longhorn-upgrade-responder.default.svc.cluster.local:8314/v1/checkupgrade true 22m  Match the checkUpgradeURL with the application name: http://&amp;lt;APP_NAME&amp;gt;-upgrade-responder.default.svc.cluster.local:8314/v1/checkupgrade
+ When Create unencrypted volume.
+And Create encrypted volume.
+&amp;gt; kubectl get volume -n longhorn-system -o custom-columns=&amp;#34;:metadata.name,:spec.encrypted&amp;#34; vol-encrypted true vol-unencrypted false And Create backing image.
+&amp;gt; k -n longhorn-system get backingimage NAME UUID SOURCETYPE SIZE VIRTUALSIZE AGE bi-0 1d0a5149 download 1161728 0 15s And Setting orphan-auto-deletion is false.</description>
     </item>
     
     <item>
